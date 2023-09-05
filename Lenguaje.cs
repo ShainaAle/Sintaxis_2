@@ -328,11 +328,24 @@ namespace Sintaxis_2
             }
         }
         //Condicion -> Expresion OperadorRelacional Expresion
-        private void Condicion()
+        private bool Condicion()
         {
             Expresion();
+            string operador = getContenido();
             match(Tipos.OperadorRelacional);
             Expresion();
+            float R1 = stack.Pop();
+            float R2 = stack.Pop();
+            
+            switch (operador)
+            {
+                case "==": return R2=R1;
+                case ">": return R2>R1;
+                case ">=": return R2>=R1;
+                case "<": return R2<R1;
+                case "<=": return R2<=R1;
+                default: return R2!=R1;
+            }
         }
         //If -> if (Condicion) BloqueInstrucciones | Instruccion (else BloqueInstrucciones | Instruccion)?
         private void If()
