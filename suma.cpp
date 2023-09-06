@@ -3,13 +3,20 @@
 #include<iostream>
 #include<conio.h>
 
-float x25, x26, x27, x28;
+float a,b,c,d;
 
 void main() // Funcion principal
 {
-    x25=(3+5)*8-(10-4)/2;
-    x26=3+5;
-    printf("Valor de x27 = ");
-    scanf("%f",&x27);
-    // x28=x27++; 
+    a=(3+5)*8-(10-4)/2;
+    b=8;
+    printf("Valor de c = ");
+    scanf("%f",&c);
+    if (1==1)
+    {
+        if (1==1)
+            if (2==2)
+                if (3==3)
+                    if (4==4)
+                        printf("1 == 2 \t hola \n hola2");
+    }
 }

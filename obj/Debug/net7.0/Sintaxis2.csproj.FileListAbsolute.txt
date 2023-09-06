@@ -1,0 +1,15 @@
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.csproj.AssemblyReference.cache
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.AssemblyInfoInputs.cache
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.AssemblyInfo.cs
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.csproj.CoreCompileInputs.cache
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\bin\Debug\net7.0\Sintaxis2.exe
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\bin\Debug\net7.0\Sintaxis2.deps.json
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\bin\Debug\net7.0\Sintaxis2.runtimeconfig.json
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\bin\Debug\net7.0\Sintaxis2.dll
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\bin\Debug\net7.0\Sintaxis2.pdb
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.dll
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\refint\Sintaxis2.dll
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.pdb
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\Sintaxis2.genruntimeconfig.cache
+C:\Users\shain\OneDrive\Escritorio\Escuela\Automatas 2\Sintaxis2\obj\Debug\net7.0\ref\Sintaxis2.dll
