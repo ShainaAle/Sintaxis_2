@@ -427,6 +427,7 @@ namespace Sintaxis_2
             {
                 string captura = "" + Console.ReadLine();
                 float resultado = float.Parse(captura);
+                stack.Push(resultado);
                 Modifica(variable,resultado);
             }
             match(")");
@@ -483,6 +484,12 @@ namespace Sintaxis_2
                 float R1 = stack.Pop();
                 if (operador == "*")
                     stack.Push(R1*R2);
+                else if (operador == "%")
+                    stack.Push(R1%R2);
+                else if (operador =="++" || operador == "+=")
+                    stack.Push(R2 + 1);
+                else if (operador =="--" || operador == "-=")
+                    stack.Push(R2 - 1);  
                 else
                     stack.Push(R1/R2);
             }

@@ -2,11 +2,4 @@ Autor: Guillermo Fernandez Romero
 Fecha: 3-Mayo-2023 15:09
 a =  3 5 + 8 * 10 4 - 2 / - = 61
 b =  8 = 8
- 1 1 1 1 2 2 3 3 4 4-----------------
-V a r i a b l e s
------------------
-a Float = 61
-b Float = 8
-c Float = 0
-d Float = 0
------------------
+ 2 % 0 10
