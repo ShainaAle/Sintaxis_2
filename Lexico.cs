@@ -10,7 +10,7 @@ namespace Sintaxis_2
     {
         const int F = -1;
         const int E = -2;
-
+        DateTime myValue = DateTime.Now;
         int[,] TRAND =
         { 
           // 0   1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
@@ -32,8 +32,8 @@ namespace Sintaxis_2
             { F, F, F, F,16, F, F, F, F,16, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 14
             { F, F, F, F, 6, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 15
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 16
-            { F, F, F, F,19, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
-            { F, F, F, F,19, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
+            { F, F, F, F,21, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
+            { F, F, F, F,21, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 19
             { F, F, F, F,21, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 20
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 21
@@ -64,8 +64,8 @@ namespace Sintaxis_2
         {
             linea = columna = 1;
             log = new StreamWriter("prueba.log");
-            log.WriteLine("Autor: Guillermo Fernandez Romero");
-            log.WriteLine("Fecha: 3-Mayo-2023 15:09");
+            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi");
+            log.WriteLine("Fecha y hora: " + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             log.AutoFlush = true;
             if (File.Exists("prueba.cpp"))
             {
@@ -80,8 +80,8 @@ namespace Sintaxis_2
         {
             linea = columna = 1;
             log = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".log");
-            log.WriteLine("Autor: Guillermo Fernandez Romero");
-            log.WriteLine("Fecha: 3-Mayo-2023 15:09");
+            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi");
+            log.WriteLine("Fecha y hora: " + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             log.AutoFlush = true;
             if (Path.GetExtension(nombre) != ".cpp")
             {

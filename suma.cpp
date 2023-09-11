@@ -3,15 +3,19 @@
 #include<iostream>
 
 float a,b,c;
+int iostream;
 
 void main() // Funcion principal
 {
-    a=(3+5)*8-(10-4)/2;
+    a=2;
     b=8;
-    printf("Valor de c = ",c);
+    c=10;
+    printf("Valor de c = ",iostream);
+
     scanf("%f",&c);
-    printf("Valor de b = ",b);
-    if (c%2==0)
+/*/
+    //printf("Valor de b = ", b );
+    if (10/2 == 10)
     {
         printf("\nc es par\t\tITQ");
         if (c==10)
@@ -22,11 +26,13 @@ void main() // Funcion principal
         printf("\nc es impar\t\tITQ");
     }
     printf("Valor de b = ",b);
-    b++;
-    c--;
-    c+=(10-b);
-    b-=9;
+   // b++;
+    //c+=10;
+    //c%2;
+    //c+=(10-b);
+    /*b-=9;
     printf("El valor de a = ",a);
     printf("El valor de b = ",b);
-    printf("El valor de d = ",d);
+    printf("El valor de d = ",d);*/
+    //printf("Valor de c = ", c );
 }
