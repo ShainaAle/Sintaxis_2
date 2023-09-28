@@ -9,7 +9,7 @@ using System.Threading.Tasks;
     Requerimiento 1: Implementar la ejecucion del while
     Requerimiento 2: Implementar la ejecucion del do - while
     Requerimiento 3: Implementar la ejecucion del for
-    Requerimiento 4: Marcar errores semanticos
+    Requerimiento 4: Marcar errores semanticos -> Asignacion
     Requerimiento 5: CAST
 */
 
@@ -89,6 +89,36 @@ namespace Sintaxis_2
             }
             return 0;
         }
+        private Variable.TiposDatos getTipo(string nombre)
+        {
+            foreach (Variable v in lista)
+            {
+                 if (v.getNombre() == nombre)
+                 {
+                    return v.getTiposDatos();
+                 }  
+            }
+            return Variable.TiposDatos.Char;
+        }
+           
+        private Variable.TiposDatos getTipo(float resulatdo)
+        {
+            if (resulatdo % 1 !=0 )
+            {
+                return Variable.TiposDatos.Float;
+            }
+            else if (resulatdo < 256)
+            {
+                return Variable.TiposDatos.Char;
+            }
+                       
+            else if (resulatdo < 65536)
+            {
+                return Variable.TiposDatos.Int;
+            }
+            return Variable.TiposDatos.Float;
+        }
+
         // Libreria -> #include<Identificador(.h)?>
         private void Libreria()
         {
@@ -364,6 +394,11 @@ namespace Sintaxis_2
             log.WriteLine(" = " + resultado);
             if (ejecuta)
             {
+                Variable.TiposDatos tipoDatoVariable = getTipo (variable);
+                Variable.TiposDatos tipoDatoResultado = getTipo (resultado);
+
+                //Console.WriteLine(variable + " = " + tipoDatoVariable);
+                //Console.WriteLine(resultado + " = " + tipoDatoResultado);
                 Modifica(variable, resultado);
             }
             match(";");
@@ -614,6 +649,7 @@ namespace Sintaxis_2
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
+            Console.WriteLine(getContenido() + " " + float.Parse(getContenido()));
             if (getClasificacion() == Tipos.Numero)
             {
                 log.Write(" " + getContenido());

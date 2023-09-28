@@ -2,11 +2,12 @@
 #include<math.h>
 #include<iostream>
 
-float a,b,c,d;
+char a;
 
 void main() // Funcion principal
 {
-    a=(3+5)*8-(10-4)/2;
+    a = 1.5;
+    /*a=(3+5)*8-(10-4)/2;
     b=19;
     printf("Valor de c = ");
     scanf("%f",&c);
@@ -36,5 +37,5 @@ void main() // Funcion principal
     printf("\nEl valor de a = ",a);
     printf("\nEl valor de b = ",b);
     printf("\nEl valor de d = ",d);
-    printf("\nEl valor de c = ",c);
+    printf("\nEl valor de c = ",c);*/
 }
