@@ -271,7 +271,6 @@ namespace Sintaxis_2
                 if (getContenido() == "+=")
                 {
                     match("+=");
-                    //Agrego
                     Expresion();
                     float val = getValor(variable);
                     if (getClasificacion() == Tipos.Identificador)
