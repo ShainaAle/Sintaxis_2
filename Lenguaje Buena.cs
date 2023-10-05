@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-/*
-    Requerimiento 1: Implementar la ejecucion del while FALTAAA
-    Requerimiento 2: Implemenatr la ejecicion del do - whiLE LISTOOOO
-    Requerimiento 3: Implementar la ejecucion del for LISTOOO
-    Requerimiento 4: Marcar errores semánticos ???
-    Requerimiento 5: CAST LISTOO
+/*                      REQUERIMIENTOS PARCIAL 1
+    Requerimiento 1: Mensajes del printf deben salir sin comillas
+                     Incluir \n y \t como secuencias de escape
+    Requerimiento 2: Agregar el % al PorFactor
+                     Modifcar el valor de una variable con ++,--,+=,-=,*=,/=.%=
+    Requerimiento 3: Cada vez que se haga un match(Tipos.Identificador) verficar el
+                     uso de la variable
+                     Icremento(), Printf(), Factor() y usar getValor y Modifica
+                     Levantar una excepcion en scanf() cuando se capture un string
+    Requerimiento 4: Implemenar la ejecución del ELSE
+*/
+
+/*                      REQUERIMIENTOS PARCIAL 2
+    Requerimiento 1: Implementar la ejecucion del while
+    Requerimiento 2: Implemenatr la ejecicion del do - while
+    Requerimiento 3: Implementar la ejecucion del for
+    Requerimiento 4: Marcar errores semánticos
+    Requerimiento 5: CAST
 */
 
 
@@ -309,15 +321,13 @@ namespace Sintaxis_2
                 //Console.WriteLine(resultado + " = "+tipoDatoResultado);
                 //Console.WriteLine("expresion = "+tipoDatoExpresion);
 
-                //Variable.TiposDatos tipoDatoMayor = 
-
-                if (tipoDatoVariable >= tipoDatoResultado)
+                if (tipoDatoVariable >= tipoDatoExpresion)
                 {
                     Modifica(variable, resultado);
                 }
                 else
                 {
-                    throw new Error("de semantica, no se puede asignar un <" + tipoDatoResultado + "> a un <" + tipoDatoVariable + ">", log, linea, columna);
+                    throw new Error("de semantica, no se puede asignar un <" + tipoDatoExpresion + "> a un <" + tipoDatoVariable + ">", log, linea, columna);
                 }
             }
             match(";");
@@ -328,13 +338,13 @@ namespace Sintaxis_2
             int principio = caracter;
             int lineaInicio = linea;
 
-            match("while");
-            match("(");
-            
-            String var = getContenido();
+            String var;
+            var = getContenido();
 
             do
             {
+                match("while");
+                match("(");
                 ejecuta = Condicion() && ejecuta;
                 match(")");
 
@@ -343,16 +353,16 @@ namespace Sintaxis_2
                 else
                     Instruccion(ejecuta);
                 
-
                 if (ejecuta)
                 {
                     archivo.DiscardBufferedData();
-                    caracter = principio - var.Length -1;
+                    caracter = principio - var.Length - 1;
                     archivo.BaseStream.Seek(caracter, SeekOrigin.Begin);
                     nextToken();
                     linea = lineaInicio;
                     caracter = principio;
                 }
+
             } while (ejecuta);
         }
         //Do -> do BloqueInstrucciones | Instruccion while(Condicion)
@@ -394,18 +404,6 @@ namespace Sintaxis_2
             match("for");
             match("(");
             Asignacion(ejecuta);
-            /*Condicion();
-            match(";");
-            Incremento(ejecuta);
-            match(")");
-            if (getContenido() == "{")
-            {
-                BloqueInstrucciones(ejecuta);
-            }
-            else
-            {
-                Instruccion(ejecuta);
-            }*/
 
             int inicia = caracter;
             int lineaInicio = linea;
@@ -653,7 +651,6 @@ namespace Sintaxis_2
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
-            //Console.WriteLine(getContenido() + " " + float.Parse(getContenido()));
             if (getClasificacion() == Tipos.Numero)
             {
                 log.Write(" " + getContenido());
@@ -714,12 +711,12 @@ namespace Sintaxis_2
         }
     float castea(float resultado, Variable.TiposDatos tipoDato)
         {
-            
             if(tipoDato == Variable.TiposDatos.Char)
             {   
                 if(resultado%1>0)
+                {
                     resultado = (float)Math.Round(resultado);
-
+                }
                 resultado = resultado % 256;
             }
             else if(tipoDato == Variable.TiposDatos.Int)
