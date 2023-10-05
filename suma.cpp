@@ -1,41 +1,60 @@
-#include<stdio.h>
-#include<math.h>
-#include<iostream>
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
 
-char a;
+char altura,i,j;
 
 void main() // Funcion principal
 {
-    a = 1.5;
-    /*a=(3+5)*8-(10-4)/2;
-    b=19;
-    printf("Valor de c = ");
-    scanf("%f",&c);
-    if (c%2==0)
-    {
+    printf("\nAltura: ");
+    scanf("&i",&altura);
 
-        printf("\nc es par\t\tITQ");
-        if (c==10)
-            printf("Se ejecutÃ³ el segundo If ",c);
-        else
-            printf("else");
-        a = 70;
-    }
-    else
+    /*printf("\nwhile:\n");
+    i = 1;
+    while (i <= altura)
     {
-        printf("\nc es impar\tITQ\n");
-        if(c==11)
-            printf("Se ejecutÃ³ el segundo if del Else");
-        else 
-            a=0;
+        j = 250;
+        while (j < 250+i)
+        {
+            if (j%2==0)
+                printf("-");
+            else
+                printf("+");
+            j++;
+        }
+        i++;
+        printf("\n");
+    }*/
+
+    printf("\nfor:\n");
+    for (i = 1; i <= altura; i++)
+    {
+        for (j = 250; j < 250+i; j++)
+        {
+            if (j%2==0)
+                printf("-");
+            else
+                printf("+");
+        }
+        printf("\n");
     }
-    b++;
-    c--;
-    d = 3;
-    c+=(15-b); //b = 9
-    b-=9;
-    printf("\nEl valor de a = ",a);
-    printf("\nEl valor de b = ",b);
-    printf("\nEl valor de d = ",d);
-    printf("\nEl valor de c = ",c);*/
+    
+    
+    printf("do:\n");
+    i = 1;
+    do
+    {
+        j = 250;
+        do
+        {
+            if (j%2==0)
+                printf("-");
+            else
+                printf("+");
+            j++;
+        } while (j < 250+i);
+        i++;
+        printf("\n");
+    } while (i <= altura);
+
 }
