@@ -3,19 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-/*                      REQUERIMIENTOS PARCIAL 1
-    Requerimiento 1: Mensajes del printf deben salir sin comillas
-                     Incluir \n y \t como secuencias de escape
-    Requerimiento 2: Agregar el % al PorFactor
-                     Modifcar el valor de una variable con ++,--,+=,-=,*=,/=.%=
-    Requerimiento 3: Cada vez que se haga un match(Tipos.Identificador) verficar el
-                     uso de la variable
-                     Icremento(), Printf(), Factor() y usar getValor y Modifica
-                     Levantar una excepcion en scanf() cuando se capture un string
-    Requerimiento 4: Implemenar la ejecución del ELSE
-*/
-
-/*                      REQUERIMIENTOS PARCIAL 2
+/*                      
     Requerimiento 1: Implementar la ejecucion del while
     Requerimiento 2: Implemenatr la ejecicion del do - while
     Requerimiento 3: Implementar la ejecucion del for
@@ -110,7 +98,7 @@ namespace Sintaxis_2
             {
                 if (v.getNombre() == nombre)
                 {
-                    return v.getTiposDatos ();
+                    return v.getTiposDatos();
                 }
             }
             return Variable.TiposDatos.Char;
@@ -121,11 +109,11 @@ namespace Sintaxis_2
             {
                 return Variable.TiposDatos.Float;
             }
-            if(resultado < 256)
+            if (resultado < 256)
             {
                 return Variable.TiposDatos.Char;
             }
-            else if(resultado < 65536)
+            else if (resultado < 65536)
             {
                 return Variable.TiposDatos.Int;
             }
@@ -199,7 +187,7 @@ namespace Sintaxis_2
             {
                 ListaInstrucciones(ejecuta);
                 String var = getContenido();
-                valor = getValor(var)+1;
+                valor = getValor(var) + 1;
             }
             match("}");
             return valor;
@@ -317,10 +305,6 @@ namespace Sintaxis_2
                 Variable.TiposDatos tipoDatoVariable = getTipo(variable);
                 Variable.TiposDatos tipoDatoResultado = getTipo(resultado);
 
-                //Console.WriteLine(variable + " = "+tipoDatoVariable);
-                //Console.WriteLine(resultado + " = "+tipoDatoResultado);
-                //Console.WriteLine("expresion = "+tipoDatoExpresion);
-
                 if (tipoDatoVariable >= tipoDatoExpresion)
                 {
                     Modifica(variable, resultado);
@@ -352,7 +336,7 @@ namespace Sintaxis_2
                     BloqueInstrucciones(ejecuta);
                 else
                     Instruccion(ejecuta);
-                
+
                 if (ejecuta)
                 {
                     archivo.DiscardBufferedData();
@@ -433,7 +417,7 @@ namespace Sintaxis_2
                 if (ejecuta)
                 {
 
-                    if(tipoDatoResultado <= tipoDatoExpresion)
+                    if (tipoDatoResultado <= tipoDatoExpresion)
                     {
                         Modifica(variable, resultado);
                         archivo.DiscardBufferedData();
@@ -444,7 +428,7 @@ namespace Sintaxis_2
                     }
                     else
                     {
-                        throw new Error("de semantica, no se puede asignar un <"+tipoDatoResultado+"> a un <"+tipoDatoVariable+">", log, linea, columna);
+                        throw new Error("de semantica, no se puede asignar un <" + tipoDatoResultado + "> a un <" + tipoDatoVariable + ">", log, linea, columna);
                     }
 
                 }
@@ -464,12 +448,12 @@ namespace Sintaxis_2
             if (getContenido() == "++")
             {
                 match("++");
-                valor = getValor(var)+1;
+                valor = getValor(var) + 1;
             }
             else
             {
                 match("--");
-                valor = getValor(var)-1;
+                valor = getValor(var) - 1;
             }
             return valor;
         }
@@ -532,11 +516,6 @@ namespace Sintaxis_2
             match("(");
             if (ejecuta)
             {
-                /*String imprime = getContenido();
-                imprime = imprime.Replace("\\t", "\t");
-                imprime = imprime.Replace("\\n", "\n");
-                imprime = imprime.Replace('"', '\0');
-                Console.Write(imprime);*/
                 string cadena = getContenido().TrimStart('"');
                 cadena = cadena.Remove(cadena.Length - 1);
                 cadena = cadena.Replace(@"\n", "\n");
@@ -680,7 +659,7 @@ namespace Sintaxis_2
                 else if (huboCast)
                 {
                     tipoDatoExpresion = tipoDatoCast;
-                    stack.Push(castea(stack.Pop(),tipoDatoCast));
+                    stack.Push(castea(stack.Pop(), tipoDatoCast));
                 }
             }
             else
@@ -709,19 +688,19 @@ namespace Sintaxis_2
                 }
             }
         }
-    float castea(float resultado, Variable.TiposDatos tipoDato)
+        float castea(float resultado, Variable.TiposDatos tipoDato)
         {
-            if(tipoDato == Variable.TiposDatos.Char)
-            {   
-                if(resultado%1>0)
+            if (tipoDato == Variable.TiposDatos.Char)
+            {
+                if (resultado % 1 > 0)
                 {
                     resultado = (float)Math.Round(resultado);
                 }
                 resultado = resultado % 256;
             }
-            else if(tipoDato == Variable.TiposDatos.Int)
+            else if (tipoDato == Variable.TiposDatos.Int)
             {
-                if(resultado%1>0)
+                if (resultado % 1 > 0)
                     resultado = (float)Math.Round(resultado);
 
                 resultado = resultado % 65536;
