@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-/*                      
-    Requerimiento 1: Implementar la ejecucion del while
-    Requerimiento 2: Implemenatr la ejecicion del do - while
-    Requerimiento 3: Implementar la ejecucion del for
-    Requerimiento 4: Marcar errores semánticos
-    Requerimiento 5: CAST
-*/
-
-
 namespace Sintaxis_2
 {
     public class Lenguaje : Sintaxis
