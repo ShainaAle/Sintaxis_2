@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 
 namespace Sintaxis_2
 {
@@ -10,7 +12,7 @@ namespace Sintaxis_2
     {
         const int F = -1;
         const int E = -2;
-        DateTime myValue = DateTime.Now;
+
         int[,] TRAND =
         { 
           // 0   1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
@@ -32,8 +34,8 @@ namespace Sintaxis_2
             { F, F, F, F,16, F, F, F, F,16, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 14
             { F, F, F, F, 6, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 15
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 16
-            { F, F, F, F,21, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
-            { F, F, F, F,21, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
+            { F, F, F, F,19, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
+            { F, F, F, F,19, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 19
             { F, F, F, F,21, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 20
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 21
@@ -57,17 +59,23 @@ namespace Sintaxis_2
         };
         protected StreamReader archivo;
         protected StreamWriter log;
+        protected StreamWriter asm;
 
         protected int linea;
         protected int columna;
         protected int caracter;
         public Lexico()
         {
+            DateTime myValue = DateTime.Now;
             linea = columna = caracter = 1;
             log = new StreamWriter("prueba.log");
-            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi");
-            log.WriteLine("Fecha y hora: " + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm = new StreamWriter("prueba.asm");
             log.AutoFlush = true;
+            asm.AutoFlush = true;
+            log.WriteLine("Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine("; Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (File.Exists("prueba.cpp"))
             {
                 archivo = new StreamReader("prueba.cpp");
@@ -79,11 +87,16 @@ namespace Sintaxis_2
         }
         public Lexico(string nombre)
         {
-            linea = columna= caracter = 1;
+            DateTime myValue = DateTime.Now;
+            linea = columna = caracter = 1;
             log = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".log");
-            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi");
-            log.WriteLine("Fecha y hora: " + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".asm");
             log.AutoFlush = true;
+            asm.AutoFlush = true;
+            log.WriteLine("Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine("; Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (Path.GetExtension(nombre) != ".cpp")
             {
                 throw new Error("El archivo " + nombre + " no tiene extension CPP", log, linea, columna);
@@ -102,6 +115,7 @@ namespace Sintaxis_2
         {
             archivo.Close();
             log.Close();
+            asm.Close();
         }
         private int Columna(char t)
         {
@@ -299,6 +313,6 @@ namespace Sintaxis_2
         public bool FinArchivo()
         {
             return archivo.EndOfStream;
-        }
+        }
     }
 }
