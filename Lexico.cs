@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
+
 
 namespace Sintaxis_2
 {
@@ -60,22 +59,23 @@ namespace Sintaxis_2
         protected StreamReader archivo;
         protected StreamWriter log;
         protected StreamWriter asm;
-
+        protected int character;
+        protected int character2;
+        protected int character3;
         protected int linea;
         protected int columna;
-        protected int caracter;
         public Lexico()
         {
             DateTime myValue = DateTime.Now;
-            linea = columna = caracter = 1;
+            linea = columna = character = 1;
             log = new StreamWriter("prueba.log");
             asm = new StreamWriter("prueba.asm");
+            log.WriteLine("Autora: Shaina Alexandra Xochitiotzi Rojas");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             log.AutoFlush = true;
             asm.AutoFlush = true;
-            log.WriteLine("Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
-            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
-            asm.WriteLine("; Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
-            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine(";Autora: Shaina Alexandra Xochitiotzi Rojas");
+            asm.WriteLine(";" + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (File.Exists("prueba.cpp"))
             {
                 archivo = new StreamReader("prueba.cpp");
@@ -88,15 +88,15 @@ namespace Sintaxis_2
         public Lexico(string nombre)
         {
             DateTime myValue = DateTime.Now;
-            linea = columna = caracter = 1;
+            linea = columna = character = 1;
             log = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".log");
             asm = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".asm");
+            log.WriteLine("Autora: Shaina Alexandra Xochitiotzi Rojas");
+            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             log.AutoFlush = true;
             asm.AutoFlush = true;
-            log.WriteLine("Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
-            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
-            asm.WriteLine("; Autor: SHAINA ALEXANDRA XHOTIOTZI ROJAS");
-            log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine(";Autora: Shaina Alexandra Xochitiotzi Rojas");
+            asm.WriteLine(";" + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (Path.GetExtension(nombre) != ".cpp")
             {
                 throw new Error("El archivo " + nombre + " no tiene extension CPP", log, linea, columna);
@@ -253,7 +253,7 @@ namespace Sintaxis_2
                 if (Estado >= 0)
                 {
                     archivo.Read();
-                    caracter++;
+                    character++;
                     columna++;
                     if (Estado > 0)
                     {
@@ -296,7 +296,7 @@ namespace Sintaxis_2
             }
             if (!FinArchivo())
             {
-                // log.WriteLine(getContenido() + " | " + getClasificacion());
+                log.WriteLine(getContenido() + " | " + getClasificacion());
             }
             if (Estado == E)
             {
@@ -313,6 +313,6 @@ namespace Sintaxis_2
         public bool FinArchivo()
         {
             return archivo.EndOfStream;
-        }
+        }
     }
 }
