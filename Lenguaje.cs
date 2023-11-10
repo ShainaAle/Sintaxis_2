@@ -20,23 +20,23 @@ namespace Sintaxis_2
     {
         List<Variable> lista;
         Stack<float> stack;
-        int contadorIf, contadorFor, contadorWhile, contadorDo_While, contadorElse;
+        int contIf, contFor, contWhile, contDo_While, contElse;
         Variable.TiposDatos tipoDatoExpresion;
         public Lenguaje()
         {
             lista = new List<Variable>();
             stack = new Stack<float>();
             tipoDatoExpresion = Variable.TiposDatos.Char;
-            contadorIf = contadorFor = contadorWhile = contadorDo_While = 1;
-            contadorElse = 0;
+            contIf = contFor = contWhile = contDo_While = 1;
+            contElse = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
             lista = new List<Variable>();
             stack = new Stack<float>();
             tipoDatoExpresion = Variable.TiposDatos.Char;
-            contadorIf = contadorFor = contadorWhile = contadorDo_While = 1;
-            contadorElse = 0;
+            contIf = contFor = contWhile = contDo_While = 1;
+            contElse = 0;
         }
 
         //Programa  -> Librerias? Variables? Main
@@ -415,11 +415,11 @@ namespace Sintaxis_2
         {
             if (primeraVez)
             {
-                asm.WriteLine("; While " + contadorWhile);
+                asm.WriteLine("; While " + contWhile);
 
             }
-            string etiquetaInicio = "InicioWhile" + contadorWhile;
-            string etiquetaFin = "FinWhile" + contadorWhile++;
+            string etiquetaInicio = "IniciaWhile" + contWhile;
+            string etiquetaFin = "FinalizaWhile" + contWhile++;
             if (primeraVez)
             {
                 asm.WriteLine(etiquetaInicio + ":");
@@ -462,10 +462,10 @@ namespace Sintaxis_2
         {
             if (primeraVez)
             {
-                asm.WriteLine("; Do-While " + contadorWhile);
+                asm.WriteLine("; Do-While " + contDo_While);
             }
-            string etiquetaInicio = "InicioDo-While" + contadorDo_While;
-            string etiquetaFin = "FinDo-While" + contadorDo_While++;
+            string etiquetaInicio = "IniciaDo-While" + contDo_While;
+            string etiquetaFin = "TerminaDo-While" + contDo_While++;
             if (primeraVez)
             {
                 asm.WriteLine(etiquetaInicio + ":");
@@ -509,13 +509,13 @@ namespace Sintaxis_2
         {
             if (primeraVez)
             {
-                asm.WriteLine("; For: " + contadorFor);
+                asm.WriteLine("; For: " + contFor);
             }
             match("for");
             match("(");
             Asignacion(ejecuta, primeraVez);
-            string etiquetaInicio = "InicioFor" + contadorFor;
-            string etiquetaFin = "FinFor" + contadorFor++;
+            string etiquetaInicio = "IniciaFor" + contFor;
+            string etiquetaFin = "TerminaFor" + contFor++;
 
 
             int inicia = character;
@@ -649,15 +649,15 @@ namespace Sintaxis_2
 
             if (primeraVez)
             {
-                asm.WriteLine("; if: " + contadorIf);
+                asm.WriteLine("; if: " + contIf);
             }
 
-            string etiqueta = "Eif" + contadorIf;
+            string etiqueta = "EtiquetaIf" + contIf;
             if (primeraVez){
-                contadorElse++;
-                contadorIf++;
+                contElse++;
+                contIf++;
             }
-            string etiquetaE = "Eelse" + contadorElse;
+            string etiquetaE = "EtiquetaElse" + contElse;
             bool evaluacion = Condicion(etiqueta, primeraVez);
 
             match(")");
@@ -676,7 +676,7 @@ namespace Sintaxis_2
                 match("else");
                 if (primeraVez)
                 {
-                    asm.WriteLine("; else: " + contadorElse);
+                    asm.WriteLine("; else: " + contElse);
                     asm.WriteLine("JMP " + etiquetaE);
                 }
                 if (primeraVez)
@@ -696,12 +696,6 @@ namespace Sintaxis_2
                 {
                     asm.WriteLine(etiquetaE + ":");
                 }
-                /*if (primeraVez)
-                {
-                    contadorElse++;
-                    contadorIf++;
-
-                }*/
             }
             primeraVez = false;
         }
@@ -791,7 +785,7 @@ namespace Sintaxis_2
                     }
                     else
                     {
-                        throw new Error("de semantica, no se puede asignar in <" + getTipo(resultado) + "> a un <" + getTipo(variable) + ">", log, linea, columna);
+                        throw new Error("de semantica, no se puede asignar <" + getTipo(resultado) + "> a un <" + getTipo(variable) + ">", log, linea, columna);
                     }
                 }
             }
