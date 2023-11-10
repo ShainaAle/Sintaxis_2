@@ -653,7 +653,8 @@ namespace Sintaxis_2
             }
 
             string etiqueta = "EtiquetaIf" + contIf;
-            if (primeraVez){
+            if (primeraVez)
+            {
                 contElse++;
                 contIf++;
             }
