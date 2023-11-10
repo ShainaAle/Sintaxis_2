@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-//
+
 /*
     Requerimiento 1: Programar scanf 
     Requerimiento 2: Programar printf
@@ -22,22 +20,23 @@ namespace Sintaxis_2
     {
         List<Variable> lista;
         Stack<float> stack;
-        int contIf, contFor;
-
+        int contadorIf, contadorFor, contadorWhile, contadorDo_While, contadorElse;
         Variable.TiposDatos tipoDatoExpresion;
         public Lenguaje()
         {
             lista = new List<Variable>();
             stack = new Stack<float>();
             tipoDatoExpresion = Variable.TiposDatos.Char;
-            contIf = contFor = 1;
+            contadorIf = contadorFor = contadorWhile = contadorDo_While = 1;
+            contadorElse = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
             lista = new List<Variable>();
             stack = new Stack<float>();
             tipoDatoExpresion = Variable.TiposDatos.Char;
-            contIf = contFor = 1;
+            contadorIf = contadorFor = contadorWhile = contadorDo_While = 1;
+            contadorElse = 0;
         }
 
         //Programa  -> Librerias? Variables? Main
@@ -136,6 +135,7 @@ namespace Sintaxis_2
             }
             return Variable.TiposDatos.Float;
         }
+
         // Libreria -> #include<Identificador(.h)?>
         private void Libreria()
         {
@@ -219,27 +219,27 @@ namespace Sintaxis_2
         {
             if (getContenido() == "printf")
             {
-                Printf(ejecuta);
+                Printf(ejecuta, primeraVez);
             }
             else if (getContenido() == "scanf")
             {
-                Scanf(ejecuta);
+                Scanf(ejecuta, primeraVez);
             }
             else if (getContenido() == "if")
             {
-                If(ejecuta);
+                If(ejecuta, primeraVez);
             }
             else if (getContenido() == "while")
             {
-                While(ejecuta,primeraVez);
+                While(ejecuta, primeraVez);
             }
             else if (getContenido() == "do")
             {
-                Do(ejecuta,primeraVez);
+                Do(ejecuta, primeraVez);
             }
             else if (getContenido() == "for")
             {
-                For(ejecuta,primeraVez);
+                For(ejecuta, primeraVez);
             }
             else
             {
@@ -263,62 +263,126 @@ namespace Sintaxis_2
                 match("=");
                 Expresion(primeraVez);
                 resultado = stack.Pop();
-                asm.WriteLine("POP AX");
-                asm.WriteLine("; Asignacion "+variable);
-                asm.WriteLine("MOV "+variable+", AX");
+                if (primeraVez)
+                {
+                    asm.WriteLine("POP AX");
+                    asm.WriteLine("; Asignacion de " + variable);
+                    asm.WriteLine("MOV " + variable + ", AX");
+                }
             }
             else if (getClasificacion() == Tipos.IncrementoTermino)
             {
                 if (getContenido() == "++")
                 {
                     match("++");
-                    // INC
                     resultado = getValor(variable) + 1;
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("INC AX");
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
+                }
+                else if (getContenido() == "--")
+                {
+                    match("--");
+                    resultado = getValor(variable) - 1;
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("DEC AX");
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
+                }
+                else if (getContenido() == "+=")
+                {
+                    match("+=");
+                    Expresion(primeraVez);
+                    resultado = stack.Pop();
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("POP AX");
+                    }
+                    resultado += getValor(variable);
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("ADD AX, BX");
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                 }
                 else
                 {
-                    match("--");
-                    // DEC
-                    resultado = getValor(variable) - 1;
+                    match("-=");
+                    Expresion(primeraVez);
+                    resultado = stack.Pop();
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("POP AX");
+                    }
+                    resultado = getValor(variable) - resultado;
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("SUB BX, AX");
+                        asm.WriteLine("MOV " + variable + ", BX");
+                    }
                 }
             }
             else if (getClasificacion() == Tipos.IncrementoFactor)
             {
-                resultado = getValor(variable);
-                if (getContenido() == "+=")
-                {
-                    match("+=");
-                    Expresion(primeraVez);
-                    resultado += stack.Pop();
-                    asm.WriteLine("POP AX");
-                }
-                else if (getContenido() == "-=")
-                {
-                    match("-=");
-                    Expresion(primeraVez);
-                    resultado -= stack.Pop();
-                    asm.WriteLine("POP AX");
-                }
-                else if (getContenido() == "*=")
+                if (getContenido() == "*=")
                 {
                     match("*=");
                     Expresion(primeraVez);
-                    resultado *= stack.Pop();
-                    asm.WriteLine("POP AX");
+                    resultado = stack.Pop();
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("POP AX");
+                    }
+                    resultado *= getValor(variable);
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("IMUL BX");
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                 }
                 else if (getContenido() == "/=")
                 {
                     match("/=");
                     Expresion(primeraVez);
-                    resultado /= stack.Pop();
-                    asm.WriteLine("POP AX");
+                    resultado = stack.Pop();
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("POP AX");
+                        asm.WriteLine("MOV BX, AX");
+                    }
+                    resultado = getValor(variable) / resultado;
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("IDIV BX");
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                 }
                 else if (getContenido() == "%=")
                 {
                     match("%=");
                     Expresion(primeraVez);
-                    resultado %= stack.Pop();
-                    asm.WriteLine("POP AX");
+                    resultado = stack.Pop();
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("POP AX");
+                        asm.WriteLine("MOV BX, AX");
+                    }
+                    resultado = getValor(variable) % resultado;
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("IDIV BX");
+                        asm.WriteLine("MOV " + variable + ", DX");
+                    }
                 }
             }
             log.WriteLine(" = " + resultado);
@@ -346,53 +410,74 @@ namespace Sintaxis_2
             }
             match(";");
         }
-
         //While -> while(Condicion) BloqueInstrucciones | Instruccion
         private void While(bool ejecuta, bool primeraVez)
         {
-            int inicia = caracter;
-            int lineaInicio = linea;
+            if (primeraVez)
+            {
+                asm.WriteLine("; While " + contadorWhile);
 
-            log.WriteLine("while: ");
+            }
+            string etiquetaInicio = "InicioWhile" + contadorWhile;
+            string etiquetaFin = "FinWhile" + contadorWhile++;
+            if (primeraVez)
+            {
+                asm.WriteLine(etiquetaInicio + ":");
+            }
             do
             {
+                int inicia = character;
+                int lineaInicio = linea;
                 match("while");
                 match("(");
-                ejecuta = Condicion("",true) && ejecuta;
+                ejecuta = Condicion(etiquetaFin, primeraVez) && ejecuta;
                 match(")");
                 if (getContenido() == "{")
                 {
-                    BloqueInstrucciones(ejecuta,true);
+                    BloqueInstrucciones(ejecuta, primeraVez);
                 }
                 else
                 {
-                    Instruccion(ejecuta,primeraVez);
+                    Instruccion(ejecuta, primeraVez);
                 }
                 if (ejecuta)
                 {
                     archivo.DiscardBufferedData();
-                    caracter = inicia - 5;
-                    archivo.BaseStream.Seek(caracter, SeekOrigin.Begin);
+                    character = inicia - 6; // - 1 si while está hasta arriba, dejarlo igual si está abajo
+                    archivo.BaseStream.Seek(character, SeekOrigin.Begin);
                     nextToken();
                     linea = lineaInicio;
                 }
-            }
-            while (ejecuta);
+                if (primeraVez)
+                {
+                    asm.WriteLine("JMP " + etiquetaInicio);
+                    asm.WriteLine(etiquetaFin + ":");
+                }
+                primeraVez = false;
+            } while (ejecuta);
         }
+
         //Do -> do BloqueInstrucciones | Instruccion while(Condicion)
         private void Do(bool ejecuta, bool primeraVez)
         {
-            int inicia = caracter;
-            int lineaInicio = linea;
-
-            log.WriteLine("do: ");
-
+            if (primeraVez)
+            {
+                asm.WriteLine("; Do-While " + contadorWhile);
+            }
+            string etiquetaInicio = "InicioDo-While" + contadorDo_While;
+            string etiquetaFin = "FinDo-While" + contadorDo_While++;
+            if (primeraVez)
+            {
+                asm.WriteLine(etiquetaInicio + ":");
+            }
             do
             {
+                int inicia = character; // Guarda la posición inicial de character
+                int lineaInicio = linea;
                 match("do");
                 if (getContenido() == "{")
                 {
-                    BloqueInstrucciones(ejecuta,true);
+                    BloqueInstrucciones(ejecuta, primeraVez);
                 }
                 else
                 {
@@ -400,52 +485,57 @@ namespace Sintaxis_2
                 }
                 match("while");
                 match("(");
-                ejecuta = Condicion("",true) && ejecuta;
+                ejecuta = Condicion(etiquetaFin, primeraVez) && ejecuta;
+                match(")");
+                match(";");
                 if (ejecuta)
                 {
                     archivo.DiscardBufferedData();
-                    caracter = inicia - 2;
-                    archivo.BaseStream.Seek(caracter, SeekOrigin.Begin);
+                    character = inicia - 3; // Restablece la posición de character
+                    archivo.BaseStream.Seek(character, SeekOrigin.Begin);
                     nextToken();
                     linea = lineaInicio;
                 }
-            }
-            while (ejecuta);
-            match(")");
-            match(";");
+                if (primeraVez)
+                {
+                    asm.WriteLine("JMP " + etiquetaInicio);
+                    asm.WriteLine(etiquetaFin + ":");
+                }
+                primeraVez = false;
+            } while (ejecuta);
         }
         //For -> for(Asignacion Condicion; Incremento) BloqueInstrucciones | Instruccion
-
-        private void For(bool ejecuta, bool primera)
+        private void For(bool ejecuta, bool primeraVez)
         {
-            asm.WriteLine("; For: "+contFor);
+            if (primeraVez)
+            {
+                asm.WriteLine("; For: " + contadorFor);
+            }
             match("for");
             match("(");
-            Asignacion(ejecuta,primera);
+            Asignacion(ejecuta, primeraVez);
+            string etiquetaInicio = "InicioFor" + contadorFor;
+            string etiquetaFin = "FinFor" + contadorFor++;
 
-            string etiquetaInicio = "InicioFor"+ contFor;
-            string etiquetaFin    = "FinFor"+ contFor++;
 
-            int inicia = caracter;
+            int inicia = character;
             int lineaInicio = linea;
             float resultado = 0;
             string variable = getContenido();
-            bool primeraVez = true;
 
-            log.WriteLine("for: " + variable);
-            if (primera)
+            if (primeraVez)
             {
-                asm.WriteLine(etiquetaInicio+":");
+                asm.WriteLine(etiquetaInicio + ":");
             }
             do
             {
-                ejecuta = Condicion(etiquetaFin,primeraVez) && ejecuta;
+                ejecuta = Condicion(etiquetaFin, primeraVez) && ejecuta;
                 match(";");
                 resultado = Incremento(ejecuta);
                 match(")");
                 if (getContenido() == "{")
                 {
-                    BloqueInstrucciones(ejecuta,primeraVez);
+                    BloqueInstrucciones(ejecuta, primeraVez);
                 }
                 else
                 {
@@ -453,50 +543,47 @@ namespace Sintaxis_2
                 }
                 if (getValor(variable) < resultado)
                 {
-                    if (primera)
+                    if (primeraVez)
                     {
                         asm.WriteLine("INC " + variable);
                     }
                 }
                 else if (getValor(variable) > resultado)
                 {
-                    if (primera)
+                    if (primeraVez)
                     {
                         asm.WriteLine("DEC " + variable);
                     }
                 }
                 if (ejecuta)
                 {
-                    Variable.TiposDatos tipoDatoVariable = getTipo(variable);
-                    Variable.TiposDatos tipoDatoResultado = getTipo(resultado);
-                    if (tipoDatoVariable >= tipoDatoResultado)
+                    if (getTipo(variable) >= getTipo(resultado))
                     {
                         Modifica(variable, resultado);
                     }
                     else
                     {
-                        throw new Error("de semantica, no se puede asignar in <" + tipoDatoResultado + "> a un <" + tipoDatoVariable + ">", log, linea, columna);
+                        throw new Error("de semantica, no se puede asignar in <" + getTipo(resultado) + "> a un <" + getTipo(variable) + ">", log, linea, columna);
                     }
                     archivo.DiscardBufferedData();
-                    caracter = inicia - variable.Length - 1;
-                    archivo.BaseStream.Seek(caracter, SeekOrigin.Begin);
+                    character = inicia - variable.Length - 1;
+                    archivo.BaseStream.Seek(character, SeekOrigin.Begin);
                     nextToken();
                     linea = lineaInicio;
-                    
                 }
-                if (primera)
+                if (primeraVez)
                 {
                     asm.WriteLine("JMP " + etiquetaInicio);
+                    asm.WriteLine(etiquetaFin + ":");
                 }
                 primeraVez = false;
-            }
-            while (ejecuta);
-            asm.WriteLine(etiquetaFin+":");
-        }
+            } while (ejecuta);
 
+        }
         //Incremento -> Identificador ++ | --
         private float Incremento(bool ejecuta)
         {
+            float resultado = 0;
             if (!Existe(getContenido()))
             {
                 throw new Error("de sintaxis, la variable <" + getContenido() + "> no está declarada", log, linea, columna);
@@ -506,13 +593,14 @@ namespace Sintaxis_2
             if (getContenido() == "++")
             {
                 match("++");
-                return getValor(variable) + 1;
+                resultado = getValor(variable) + 1;
             }
             else
             {
                 match("--");
-                return getValor(variable) - 1;
+                resultado = getValor(variable) - 1;
             }
+            return resultado;
         }
         //Condicion -> Expresion OperadorRelacional Expresion
         private bool Condicion(string etiqueta, bool primeraVez)
@@ -521,8 +609,8 @@ namespace Sintaxis_2
             string operador = getContenido();
             match(Tipos.OperadorRelacional);
             Expresion(primeraVez);
-            float R1 = stack.Pop();  // Expresion 2
-            float R2 = stack.Pop();  // Expresion 1
+            float R1 = stack.Pop();
+            float R2 = stack.Pop();
 
             if (primeraVez)
             {
@@ -530,70 +618,112 @@ namespace Sintaxis_2
                 asm.WriteLine("POP AX"); // Expresion 1
                 asm.WriteLine("CMP AX, BX");
             }
+
             switch (operador)
             {
                 case "==":
-                    if (primeraVez) asm.WriteLine("JNE "+etiqueta);
+                    if (primeraVez) asm.WriteLine("JNE " + etiqueta);
                     return R2 == R1;
-                case ">": 
-                    if (primeraVez) asm.WriteLine("JBE "+etiqueta);
+                case ">":
+                    if (primeraVez) asm.WriteLine("JBE " + etiqueta);
                     return R2 > R1;
-                case ">=": 
-                    if (primeraVez) asm.WriteLine("JB "+etiqueta);
+                case ">=":
+                    if (primeraVez) asm.WriteLine("JB " + etiqueta);
                     return R2 >= R1;
-                case "<": 
-                    if (primeraVez) asm.WriteLine("JAE "+etiqueta);
+                case "<":
+                    if (primeraVez) asm.WriteLine("JAE " + etiqueta);
                     return R2 < R1;
-                case "<=": 
-                    if (primeraVez) asm.WriteLine("JA "+etiqueta);
+                case "<=":
+                    if (primeraVez) asm.WriteLine("JA " + etiqueta);
                     return R2 <= R1;
-                default: 
-                    if (primeraVez) asm.WriteLine("JE "+etiqueta);
+                default:
+                    if (primeraVez) asm.WriteLine("JE " + etiqueta);
                     return R2 != R1;
             }
         }
         //If -> if (Condicion) BloqueInstrucciones | Instruccion (else BloqueInstrucciones | Instruccion)?
-        private void If(bool ejecuta)
+        private void If(bool ejecuta, bool primeraVez)
         {
             match("if");
             match("(");
-            asm.WriteLine("; if: "+contIf);
-            string etiqueta = "Eif"+ contIf++;
-            bool evaluacion = Condicion(etiqueta,true);
+
+            if (primeraVez)
+            {
+                asm.WriteLine("; if: " + contadorIf);
+            }
+
+            string etiqueta = "Eif" + contadorIf;
+            if (primeraVez){
+                contadorElse++;
+                contadorIf++;
+            }
+            string etiquetaE = "Eelse" + contadorElse;
+            bool evaluacion = Condicion(etiqueta, primeraVez);
+
             match(")");
             if (getContenido() == "{")
             {
-                BloqueInstrucciones(evaluacion && ejecuta, true);
+                BloqueInstrucciones(evaluacion && ejecuta, primeraVez);
+
             }
             else
             {
-                Instruccion(evaluacion && ejecuta, true);
+                Instruccion(evaluacion && ejecuta, primeraVez);
+
             }
-            asm.WriteLine(etiqueta+":");
             if (getContenido() == "else")
             {
                 match("else");
+                if (primeraVez)
+                {
+                    asm.WriteLine("; else: " + contadorElse);
+                    asm.WriteLine("JMP " + etiquetaE);
+                }
+                if (primeraVez)
+                {
+                    asm.WriteLine(etiqueta + ":");
+                }
+
                 if (getContenido() == "{")
                 {
-                    BloqueInstrucciones(!evaluacion && ejecuta, true);
+                    BloqueInstrucciones(!evaluacion && ejecuta, primeraVez);
                 }
                 else
                 {
-                    Instruccion(!evaluacion && ejecuta, true);
+                    Instruccion(!evaluacion && ejecuta, primeraVez);
                 }
+                if (primeraVez)
+                {
+                    asm.WriteLine(etiquetaE + ":");
+                }
+                /*if (primeraVez)
+                {
+                    contadorElse++;
+                    contadorIf++;
+
+                }*/
             }
+            primeraVez = false;
         }
         //Printf -> printf(cadena(,Identificador)?);
-        private void Printf(bool ejecuta)
+        private void Printf(bool ejecuta, bool primeraVez)
         {
             match("printf");
             match("(");
             if (ejecuta)
             {
-                string cadena = getContenido().TrimStart('"');
-                cadena = cadena.Remove(cadena.Length - 1);
-                cadena = cadena.Replace(@"\n", "\n");
-                Console.Write(cadena);
+                Console.Write(getContenido().Replace("\"", "").Replace("\\n", "\n").Replace("\\t", "\t"));
+                if (primeraVez)
+                {
+                    asm.WriteLine("print '" + getContenido().Replace("\"", "").Replace("\\n", "'\nprintn ' '\nprint '").Replace("\\t", "  ") + "'");
+                }
+            }
+            else
+            {
+                if (primeraVez)
+                {
+                    asm.WriteLine("print '" + getContenido().Replace("\"", "").Replace("\\n", "'\nprintn ' '\nprint '").Replace("\\t", "  ") + "'");
+                }
             }
             match(Tipos.Cadena);
             if (getContenido() == ",")
@@ -606,6 +736,11 @@ namespace Sintaxis_2
                 if (ejecuta)
                 {
                     Console.Write(getValor(getContenido()));
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("MOV AX," + getContenido());
+                        asm.WriteLine("call print_num");
+                    }
                 }
                 match(Tipos.Identificador);
             }
@@ -613,7 +748,7 @@ namespace Sintaxis_2
             match(";");
         }
         //Scanf -> scanf(cadena,&Identificador);
-        private void Scanf(bool ejecuta)
+        private void Scanf(bool ejecuta, bool primeraVez)
         {
             match("scanf");
             match("(");
@@ -628,9 +763,37 @@ namespace Sintaxis_2
             match(Tipos.Identificador);
             if (ejecuta)
             {
+                if (primeraVez)
+                {
+                    asm.WriteLine("call scan_num");
+                    asm.WriteLine("MOV " + variable + ", CX");
+                }
+                else
+                {
+                    if (primeraVez)
+                    {
+                        asm.WriteLine("call scan_num");
+                        asm.WriteLine("MOV " + variable + ", CX");
+                    }
+                }
                 string captura = "" + Console.ReadLine();
-                float resultado = float.Parse(captura);
-                Modifica(variable, resultado);
+                float resultado;
+                if (!float.TryParse(captura, out resultado))
+                {
+                    throw new Error("No se puede capturar una cadena", log, linea, columna);
+                }
+                else
+                {
+                    if (getTipo(variable) >= getTipo(resultado))
+                    {
+                        stack.Push(float.Parse(captura));
+                        Modifica(variable, resultado);
+                    }
+                    else
+                    {
+                        throw new Error("de semantica, no se puede asignar in <" + getTipo(resultado) + "> a un <" + getTipo(variable) + ">", log, linea, columna);
+                    }
+                }
             }
             match(")");
             match(";");
@@ -717,22 +880,24 @@ namespace Sintaxis_2
                         asm.WriteLine("PUSH AX");
                     }
                 }
-                else if (operador == "/")
+
+                else if (operador == "%")
                 {
-                    stack.Push(R1 / R2);
+                    stack.Push(R1 % R2);
                     if (primeraVez)
                     {
                         asm.WriteLine("DIV  BX");
                         asm.WriteLine("PUSH AX");
                     }
                 }
+
                 else
                 {
-                    stack.Push(R1 % R2);
+                    stack.Push(R1 / R2);
                     if (primeraVez)
                     {
                         asm.WriteLine("DIV  BX");
-                        asm.WriteLine("PUSH DX");
+                        asm.WriteLine("PUSH AX");
                     }
                 }
             }
@@ -742,10 +907,9 @@ namespace Sintaxis_2
         {
             if (getClasificacion() == Tipos.Numero)
             {
-                log.Write(" " + getContenido());
                 if (primeraVez)
                 {
-                    asm.WriteLine("MOV AX, "+getContenido());
+                    asm.WriteLine("MOV AX, " + getContenido());
                     asm.WriteLine("PUSH AX");
                 }
                 stack.Push(float.Parse(getContenido()));
@@ -763,15 +927,15 @@ namespace Sintaxis_2
                 }
                 if (primeraVez)
                 {
-                    asm.WriteLine("MOV AX, "+getContenido());
+                    asm.WriteLine("MOV AX, " + getContenido());
                     asm.WriteLine("PUSH AX");
                 }
                 stack.Push(getValor(getContenido()));
-                match(Tipos.Identificador);
                 if (tipoDatoExpresion < getTipo(getContenido()))
                 {
                     tipoDatoExpresion = getTipo(getContenido());
                 }
+                match(Tipos.Identificador);
             }
             else
             {
@@ -783,8 +947,12 @@ namespace Sintaxis_2
                     huboCast = true;
                     switch (getContenido())
                     {
-                        case "int": tipoDatoCast = Variable.TiposDatos.Int; break;
-                        case "float": tipoDatoCast = Variable.TiposDatos.Float; break;
+                        case "int":
+                            tipoDatoCast = Variable.TiposDatos.Int;
+                            break;
+                        case "float":
+                            tipoDatoCast = Variable.TiposDatos.Float;
+                            break;
                     }
                     match(Tipos.TipoDato);
                     match(")");
@@ -795,7 +963,7 @@ namespace Sintaxis_2
                 if (huboCast)
                 {
                     tipoDatoExpresion = tipoDatoCast;
-                    stack.Push(castea(stack.Pop(), tipoDatoCast));
+                    stack.Push(castea(stack.Pop(), tipoDatoCast, primeraVez));
                     if (primeraVez)
                     {
                         asm.WriteLine("POP AX");
@@ -803,12 +971,20 @@ namespace Sintaxis_2
                 }
             }
         }
-        float castea(float resultado, Variable.TiposDatos tipoDato)
+        float castea(float resultado, Variable.TiposDatos tipoDato, bool primeraVez)
         {
-            switch (tipoDato)
+            if (tipoDato == Variable.TiposDatos.Char)
             {
-                case Variable.TiposDatos.Char: return MathF.Round(resultado) % 256;
-                case Variable.TiposDatos.Int : return MathF.Round(resultado) % 65536;
+                resultado = (float)Math.Round(resultado);
+                asm.WriteLine("MOV BX, 256");
+                resultado = resultado % 256;
+                asm.WriteLine("DIV BX");
+                asm.WriteLine("PUSH DX");
+            }
+            else if (tipoDato == Variable.TiposDatos.Int)
+            {
+                resultado = (float)Math.Round(resultado);
+                resultado = resultado % 65536;
             }
             return resultado;
         }
