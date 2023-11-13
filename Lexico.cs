@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-//Py
+using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 
 namespace Sintaxis_2
 {
@@ -33,8 +34,8 @@ namespace Sintaxis_2
             { F, F, F, F,16, F, F, F, F,16, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 14
             { F, F, F, F, 6, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 15
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 16
-            { F, F, F, F,19, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
-            { F, F, F, F,19, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
+            { F, F, F, F,21, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 17
+            { F, F, F, F,21, F, F, F, F, F, F, F, F,19, F, F, F, F, F, F, F, F, F, F, F, F}, // 18
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 19
             { F, F, F, F,21, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 20
             { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, // 21
@@ -59,23 +60,22 @@ namespace Sintaxis_2
         protected StreamReader archivo;
         protected StreamWriter log;
         protected StreamWriter asm;
-        protected int character;
-        protected int character2;
-        protected int character3;
         protected int linea;
         protected int columna;
+        protected int character; 
+
         public Lexico()
         {
             DateTime myValue = DateTime.Now;
             linea = columna = character = 1;
             log = new StreamWriter("prueba.log");
             asm = new StreamWriter("prueba.asm");
-            log.WriteLine("Autora: Shaina Alexandra Xochitiotzi Rojas");
+            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi Rojas");
             log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine("; Autor: Shaina Alexandra Xochitiotzi Rojas");
+            asm.WriteLine("; "+myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             log.AutoFlush = true;
             asm.AutoFlush = true;
-            asm.WriteLine(";Autora: Shaina Alexandra Xochitiotzi Rojas");
-            asm.WriteLine(";" + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (File.Exists("prueba.cpp"))
             {
                 archivo = new StreamReader("prueba.cpp");
@@ -91,12 +91,12 @@ namespace Sintaxis_2
             linea = columna = character = 1;
             log = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".log");
             asm = new StreamWriter(Path.GetFileNameWithoutExtension(nombre) + ".asm");
-            log.WriteLine("Autora: Shaina Alexandra Xochitiotzi Rojas");
+            log.WriteLine("Autor: Shaina Alexandra Xochitiotzi Rojas");
             log.WriteLine(myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
+            asm.WriteLine("; Autor: Shaina Alexandra Xochitiotzi Rojas");
+            asm.WriteLine("; "+(myValue.ToShortDateString() + " " + myValue.ToLongTimeString()));
             log.AutoFlush = true;
             asm.AutoFlush = true;
-            asm.WriteLine(";Autora: Shaina Alexandra Xochitiotzi Rojas");
-            asm.WriteLine(";" + myValue.ToShortDateString() + " " + myValue.ToLongTimeString());
             if (Path.GetExtension(nombre) != ".cpp")
             {
                 throw new Error("El archivo " + nombre + " no tiene extension CPP", log, linea, columna);
@@ -120,8 +120,8 @@ namespace Sintaxis_2
         private int Columna(char t)
         {
             // WS  L  D  .  =  :  ;  &  |  >  <  !  +  -  *  /  %  "  ' EOF ?  # lmd
-            // WS  L  D  .  =  :  ;  &  |  >  <  !  +  -  *  /  %  "  ' EOF ?  # lmd {  }  \n
-            // 0   1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+          // WS  L  D  .  =  :  ;  &  |  >  <  !  +  -  *  /  %  "  ' EOF ?  # lmd {  }  \n
+          // 0   1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
             if (FinArchivo())
                 return 19;
             else if (t == '\n')
@@ -243,7 +243,7 @@ namespace Sintaxis_2
             char c;
             string buffer = "";
 
-            int Estado = 0;   // Estado de inicio
+            int Estado = 0;
 
             while (Estado >= 0)
             {
@@ -253,7 +253,7 @@ namespace Sintaxis_2
                 if (Estado >= 0)
                 {
                     archivo.Read();
-                    character++;
+                    character ++;
                     columna++;
                     if (Estado > 0)
                     {
@@ -283,9 +283,9 @@ namespace Sintaxis_2
                     case "public":
                     case "protected": setClasificacion(Tipos.Zona); break;
 
-
-                    case "else":
-                    case "switch":
+                    
+                    case "else": 
+                    case "switch": 
                     case "if": setClasificacion(Tipos.Condicion); break;
 
                     case "do":
@@ -296,7 +296,7 @@ namespace Sintaxis_2
             }
             if (!FinArchivo())
             {
-                log.WriteLine(getContenido() + " | " + getClasificacion());
+                // log.WriteLine(getContenido() + " | " + getClasificacion());
             }
             if (Estado == E)
             {
